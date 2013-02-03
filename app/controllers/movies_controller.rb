@@ -7,14 +7,27 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:order_by]=='title'
-      @order_by=:title
-      @movies=Movie.all(:order=>:title)
-    elsif params[:order_by]=='release_date'
-      @order_by=:release_date
-      @movies=Movie.all(:order=>:release_date)
+    @all_ratings=Movie.ratings
+    if params[:ratings]
+      if params[:order_by]=='title'
+        @order_by=:title
+        @movies=Movie.all(:order=>:title, :conditions=>{:rating=> params[:ratings].keys})
+      elsif params[:order_by]=='release_date'
+        @order_by=:release_date
+        @movies=Movie.all(:order=>:release_date, :conditions=>{:rating=> params[:ratings].keys})
+      else
+        @movies = Movie.all(:conditions=>{:rating=> params[:ratings].keys})
+      end
     else
-      @movies = Movie.all
+      if params[:order_by]=='title'
+        @order_by=:title
+        @movies=Movie.all(:order=>:title)
+      elsif params[:order_by]=='release_date'
+        @order_by=:release_date
+        @movies=Movie.all(:order=>:release_date)
+      else
+        @movies = Movie.all
+      end
     end
   end
 
