@@ -8,6 +8,8 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings=Movie.ratings
+    save_params_in_session
+    session_redirect
     if params[:ratings]
       if params[:order_by]=='title'
         @order_by=:title
@@ -57,6 +59,25 @@ class MoviesController < ApplicationController
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
+  end
+
+  private
+
+  def save_params_in_session
+    if params[:order_by]
+      session[:order_by]=params[:order_by]
+    end
+    if params[:ratings]
+      session[:ratings]=params[:ratings]
+    end
+  end
+
+  def session_redirect
+     if session[:order_by] or session[:ratings]
+      if params[:order_by].nil? or params[:ratings].nil?
+        redirect_to movies_path(:order_by => session[:order_by], :ratings => session[:ratings])
+      end
+    end
   end
 
 end
