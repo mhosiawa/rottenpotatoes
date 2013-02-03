@@ -8,7 +8,7 @@
     - if params[:ratings]
       = check_box_tag "ratings[#{rating}]", 1, params[:ratings][rating]=='1'
     - else
-      = check_box_tag "ratings[#{rating}]"
+      = check_box_tag "ratings[#{rating}]", 1, true
   = hidden_field_tag "order_by", params[:order_by]
   = submit_tag 'Refresh', :id=>:ratings_submit
 
